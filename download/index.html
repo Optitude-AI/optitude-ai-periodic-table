@@ -336,7 +336,10 @@
       display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
       margin-top: 32px;
     }
+    .services-grid-3 { grid-template-columns: repeat(3, 1fr); }
     @media (max-width: 700px) { .services-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 900px) { .services-grid-3 { grid-template-columns: repeat(2, 1fr) !important; } }
+    @media (max-width: 600px) { .services-grid-3 { grid-template-columns: 1fr !important; } }
     .service-item {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -703,7 +706,7 @@
       <span class="section-eyebrow">What you will get from the guide</span>
       <h2>Practical, not theoretical. Built to be used.</h2>
       <p class="lead">The guide is designed to be read in a single sitting and then used as a reference document during internal planning conversations. Specifically, you will come away with:</p>
-      <div class="services-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 32px;">
+      <div class="services-grid services-grid-3" style="margin-top: 32px;">
         <div class="feature-card">
           <div class="icon">01</div>
           <h3>A clear map of AI use cases</h3>
