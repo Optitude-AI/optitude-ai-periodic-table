@@ -1,0 +1,602 @@
+     1→     1→# Design System — DOCX Skill
+     2→     2→
+     3→     3→## Color Philosophy
+     4→     4→
+     5→     5→GLM uses a **mood-driven dynamic color system** instead of fixed named palettes. Colors are constructed from three dimensions:
+     6→     6→
+     7→     7→### Three Dimensions of Document Color
+     8→     8→
+     9→     9→| Dimension | Description | Range |
+    10→    10→|-----------|-------------|-------|
+    11→    11→| **Temperature** | Warm ↔ Cool | Warm (consulting, education) ↔ Cool (tech, medical) |
+    12→    12→| **Weight** | Light ↔ Heavy | Light (resume, proposal) ↔ Heavy (legal, academic) |
+    13→    13→| **Energy** | Calm ↔ Active | Calm (official, contract) ↔ Active (report, presentation) |
+    14→    14→
+    15→    15→### Color Token System
+    16→    16→
+    17→    17→Every document uses 5 color tokens. These are **computed** based on the document's mood, not selected from a fixed list.
+    18→    18→
+    19→    19→| Token | Role | Guidance |
+    20→    20→|-------|------|----------|
+    21→    21→| `primary` | Headings, cover title | Dark, authoritative. Derived from Temperature + Weight. |
+    22→    22→| `body` | Body text | Near-black with subtle warmth/coolness. Always high contrast. |
+    23→    23→| `secondary` | Captions, footnotes | Mid-tone gray. Legible but visually recessive. |
+    24→    24→| `accent` | Table headers, lines, links | The "personality" color. Reflects document Energy. |
+    25→    25→| `surface` | Table alternating rows, card backgrounds | Very light tint of accent or neutral. |
+    26→    26→
+    27→    27→### Mood Recipes
+    28→    28→
+    29→    29→Instead of 10 fixed palettes, combine dimensions to generate colors dynamically:
+    30→    30→
+    31→    31→**Cool + Heavy + Calm** → Deep Sea Academic (Academic / Research)
+    32→    32→```js
+    33→    33→const academic = {
+    34→    34→  primary: "#162032", body: "#1C2A3D", secondary: "#5B6B7D",
+    35→    35→  accent: "#8B7E5A", surface: "#F5F7FA"
+    36→    36→};
+    37→    37→```
+    38→    38→
+    39→    39→**Warm + Heavy + Calm** → Legal Wood (Legal / Compliance)
+    40→    40→```js
+    41→    41→const legal = {
+    42→    42→  primary: "#28201C", body: "#36302C", secondary: "#6E6560",
+    43→    43→  accent: "#7A5C3A", surface: "#FBF9F7"
+    44→    44→};
+    45→    45→```
+    46→    46→
+    47→    47→**Cool + Light + Active** → Dawn Mist Tech (Tech / Digital)
+    48→    48→```js
+    49→    49→const tech = {
+    50→    50→  primary: "#0A1628", body: "#1A2B40", secondary: "#6878A0",
+    51→    51→  accent: "#5B8DB8", surface: "#F4F8FC"
+    52→    52→};
+    53→    53→```
+    54→    54→
+    55→    55→**Warm + Light + Active** → Warm Sun (Education / Training)
+    56→    56→```js
+    57→    57→const education = {
+    58→    58→  primary: "#2A3518", body: "#384228", secondary: "#6B8040",
+    59→    59→  accent: "#D4A030", surface: "#F8FAF4"
+    60→    60→};
+    61→    61→```
+    62→    62→
+    63→    63→**Neutral + Medium + Calm** → Plain Paper (Default / General)
+    64→    64→```js
+    65→    65→const general = {
+    66→    66→  primary: "#101820", body: "#182030", secondary: "#506070",
+    67→    67→  accent: "#8090A0", surface: "#F2F4F6"
+    68→    68→};
+    69→    69→```
+    70→    70→
+    71→    71→**Warm + Medium + Calm** → Terracotta (Consulting / Architecture)
+    72→    72→```js
+    73→    73→const consulting = {
+    74→    74→  primary: "#241E1A", body: "#3A3430", secondary: "#68605A",
+    75→    75→  accent: "#B08050", surface: "#FDFBF9"
+    76→    76→};
+    77→    77→```
+    78→    78→
+    79→    79→**Cool + Medium + Active** → Mint Medical (Medical / Clinical)
+    80→    80→```js
+    81→    81→const medical = {
+    82→    82→  primary: "#0E2030", body: "#1E2E40", secondary: "#4A6580",
+    83→    83→  accent: "#3888A8", surface: "#F0F6FA"
+    84→    84→};
+    85→    85→```
+    86→    86→
+    87→    87→**Neutral + Light + Calm** → White Porcelain (Product Manuals / Minimalist)
+    88→    88→```js
+    89→    89→const minimal = {
+    90→    90→  primary: "#303030", body: "#484848", secondary: "#808080",
+    91→    91→  accent: "#B89870", surface: "#FAFAF8"
+    92→    92→};
+    93→    93→```
+    94→    94→
+    95→    95→**Cool + Light + Active (Gradient)** → Lapis Tech (Tech / AI / Innovation)
+    96→    96→```js
+    97→    97→const liuliTech = {
+    98→    98→  primary: "#1A1F36", body: "#000000", secondary: "#5A6080",
+    99→    99→  accent: "#667eea", surface: "#F8F9FF",
+   100→   100→  gradient: ["#667eea", "#764ba2"],  // Purple-blue gradient (blendColors 5-step)
+   101→   101→};
+   102→   102→```
+   103→   103→
+   104→   104→**Cool + Heavy + Active (Gradient)** → Deep Sea Blue-Gold (Finance / Investment / Premium)
+   105→   105→```js
+   106→   106→const deepBlueGold = {
+   107→   107→  primary: "#0F2027", body: "#000000", secondary: "#4A6575",
+   108→   108→  accent: "#D4AF37", surface: "#F5F7FA",
+   109→   109→  gradient: ["#0F2027", "#203A43", "#2C5364"],  // 3-step deep sea blue gradient
+   110→   110→};
+   111→   111→```
+   112→   112→
+   113→   113→**Warm + Light + Active (Gradient)** → Mint Dawn (Education / Health / Green)
+   114→   114→```js
+   115→   115→const mintMorning = {
+   116→   116→  primary: "#1A3A3A", body: "#000000", secondary: "#507070",
+   117→   117→  accent: "#3CB4A0", surface: "#F0FFFE",
+   118→   118→  gradient: ["#3CB4A0", "#a8edea"],  // Mint green gradient
+   119→   119→};
+   120→   120→```
+   121→   121→
+   122→   122→**Neutral + Medium + Active** → Graphite Orange (Professional but Energetic)
+   123→   123→```js
+   124→   124→const graphiteOrange = {
+   125→   125→  primary: "#2C3E50", body: "#000000", secondary: "#607080",
+   126→   126→  accent: "#E67E22", surface: "#FDF8F3",
+   127→   127→};
+   128→   128→```
+   129→   129→
+   130→   130→### Scene → Mood Mapping
+   131→   131→
+   132→   132→| Scene Keywords | Temperature | Weight | Energy | Recipe |
+   133→   133→|----------------|-------------|--------|--------|--------|
+   134→   134→| thesis, academic | Cool | Heavy | Calm | Deep Sea Academic |
+   135→   135→| report (general) | Neutral | Medium | Calm | Plain Paper |
+   136→   136→| report (consulting) | Warm | Medium | Calm | Terracotta |
+   137→   137→| report (tech) | Cool | Light | Active | Dawn Mist Tech |
+   138→   138→| contract, agreement, legal | Warm | Heavy | Calm | Legal Wood |
+   139→   139→| resume, CV | Neutral | Light | Calm | White Porcelain (preferred) or Dawn Mist Tech |
+   140→   140→| exam, test | — | — | — | **Pure B&W** |
+   141→   141→| official document | — | — | — | **Pure B&W** |
+   142→   142→| AI, tech | Cool | Light | Active | Dawn Mist Tech |
+   143→   143→| medical | Cool | Medium | Active | Mint Medical |
+   144→   144→| environmental, sustainability | Warm | Light | Active | Warm Sun |
+   145→   145→| lesson plan (STEM / science / tech) | Cool | Light | Active | Dawn Mist Tech |
+   146→   146→| lesson plan (arts / music / PE) | Neutral | Medium | Active | Graphite Orange |
+   147→   147→| lesson plan (general education) | Neutral | Medium | Calm | Plain Paper |
+   148→   148→| education report (not lesson plan) | Warm | Light | Active | Mint Dawn |
+   149→   149→| product manual | Neutral | Light | Calm | White Porcelain |
+   150→   150→| tech, AI, internet, innovation | Cool | Light | Active | Lapis Tech |
+   151→   151→| finance, investment, premium | Cool | Heavy | Active | Deep Sea Blue-Gold |
+   152→   152→| health, green | Warm | Light | Active | Mint Dawn |
+   153→   153→| energetic, vibrant | Neutral | Medium | Active | Graphite Orange |
+   154→   154→| essay, composition, self-evaluation, review/reflection, letter (non-business), speech, application, proposal letter | — | — | — | **Pure B&W** |
+   155→   155→| _(no match)_ | Neutral | Medium | Calm | Plain Paper |
+   156→   156→
+   157→   157→### Visual Profile Color Guidance
+   158→   158→
+   159→   159→For **Profile B (Visual)** scenes — resume, copywriting, and other non-formal documents — prefer **warm neutral** tones aligned with the "Invisible Precision" design philosophy:
+   160→   160→
+   161→   161→- **Body text**: Use warm dark neutrals (`#37352F`, `#303030`, `#3A3430`) instead of cool blue-grays. This reduces eye strain.
+   162→   162→- **Surface/background**: Use warm near-white (`#F7F7F7`, `#FAFAF8`, `#FBF9F7`) instead of cool tints.
+   163→   163→- **Accent colors**: Use sparingly and only for functional differentiation (section headers, key metrics, links). 95% of the document should remain monochromatic (black, white, gray).
+   164→   164→- **Tables**: Prefer the **Zebra Stripe** style (see Table Styles §2) — hierarchy through background contrast with minimal borders. Fallback: Horizontal-Only.
+   165→   165→
+   166→   166→This does NOT apply to Profile A (Formal) scenes (report, academic, contract, official-doc, exam), which must retain pure black `"000000"` body text per regulatory standards.
+   167→   167→
+   168→   168→### Custom Color Generation
+   169→   169→
+   170→   170→When the pre-defined recipes don't fit, construct colors using these rules:
+   171→   171→
+   172→   172→1. **primary**: Start from `hsl(hue, 25-40%, 10-18%)` — dark, desaturated
+   173→   173→2. **body**: primary lightened 5-8% — readable dark
+   174→   174→3. **secondary**: primary lightened 30-40% — clearly subordinate
+   175→   175→4. **accent**: Choose a hue reflecting the domain, `hsl(domainHue, 30-50%, 45-55%)`
+   176→   176→5. **surface**: accent desaturated to 5-10%, lightened to 96-98%
+   177→   177→
+   178→   178→**Contrast check**: body text on white must achieve WCAG AA (≥4.5:1). All recipes above pass this.
+   179→   179→
+   180→   180→---
+   181→   181→
+   182→   182→## Font Specifications
+   183→   183→
+   184→   184→### Chinese Fonts
+   185→   185→
+   186→   186→| Usage | Font | Fallback |
+   187→   187→|-------|------|----------|
+   188→   188→| Headings | SimHei (SimHei) | Microsoft YaHei Bold |
+   189→   189→| Body | Microsoft YaHei (YaHei) | SimSun (SimSun) |
+   190→   190→| Academic body | SimSun (SimSun) | — |
+   191→   191→| Academic headings | SimHei (SimHei) | — |
+   192→   192→| Official doc body | FangSong (FangSong) | FangSong_GB2312 |
+   193→   193→| Official doc title | STXiaoBiaoSong (XiaoBiaoSong) | SimSun Bold |
+   194→   194→
+   195→   195→### English Fonts
+   196→   196→
+   197→   197→For **English documents** (document language = English):
+   198→   198→
+   199→   199→| Usage | Font | Fallback |
+   200→   200→|-------|------|----------|
+   201→   201→| Headings | Times New Roman Bold | Arial Bold |
+   202→   202→| Body | Times New Roman | Calibri |
+   203→   203→| Academic | Times New Roman | — |
+   204→   204→
+   205→   205→For **English text within Chinese documents**, use the Chinese document's ascii font (Calibri by default).
+   206→   206→
+   207→   207→### Font Paths (for matplotlib / image generation)
+   208→   208→
+   209→   209→```python
+   210→   210→# macOS
+   211→   211→SIMHEI = "/System/Library/Fonts/Supplemental/SimHei.ttf"
+   212→   212→# Linux
+   213→   213→SIMHEI = "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"
+   214→   214→# Fallback: download SimHei.ttf to working directory
+   215→   215→```
+   216→   216→
+   217→   217→### docx-js Font Configuration
+   218→   218→
+   219→   219→```js
+   220→   220→// In Document styles.default
+   221→   221→styles: {
+   222→   222→  default: {
+   223→   223→    document: {
+   224→   224→      run: {
+   225→   225→        font: { ascii: "Calibri", eastAsia: "Microsoft YaHei" },
+   226→   226→        size: 24, // Xiao Si 小四 12pt
+   227→   227→        color: palette.body,
+   228→   228→      },
+   229→   229→      paragraph: {
+   230→   230→        spacing: { line: 312 }, // 1.3x mandatory
+   231→   231→      },
+   232→   232→    },
+   233→   233→    heading1: {
+   234→   234→      run: {
+   235→   235→        font: { ascii: "Calibri", eastAsia: "SimHei" },
+   236→   236→        size: 32, // San Hao 三号 16pt
+   237→   237→        bold: true,
+   238→   238→        color: palette.primary,
+   239→   239→      },
+   240→   240→    },
+   241→   241→    heading2: {
+   242→   242→      run: {
+   243→   243→        font: { ascii: "Calibri", eastAsia: "SimHei" },
+   244→   244→        size: 28, // Si Hao 四号 14pt
+   245→   245→        bold: true,
+   246→   246→        color: palette.primary,
+   247→   247→      },
+   248→   248→    },
+   249→   249→  },
+   250→   250→}
+   251→   251→```
+   252→   252→
+   253→   253→---
+   254→   254→
+   255→   255→## Table Styles
+   256→   256→
+   257→   257→**Profile routing:** Profile A (Formal: report, academic, contract, exam) → Three-Line Table or Horizontal-Only Table. Profile B (Visual: resume, copywriting) → Zebra Stripe (preferred) or Horizontal-Only Table.
+   258→   258→
+   259→   259→### 1. Three-Line Table (三线表) — Academic
+   260→   260→
+   261→   261→Only three horizontal lines: top of table, bottom of header, bottom of table.
+   262→   262→
+   263→   263→```js
+   264→   264→const threeLineTable = new Table({
+   265→   265→  width: { size: 100, type: WidthType.PERCENTAGE },
+   266→   266→  borders: {
+   267→   267→    top: { style: BorderStyle.SINGLE, size: 4, color: "000000" },
+   268→   268→    bottom: { style: BorderStyle.SINGLE, size: 4, color: "000000" },
+   269→   269→    left: { style: BorderStyle.NONE },
+   270→   270→    right: { style: BorderStyle.NONE },
+   271→   271→    insideHorizontal: { style: BorderStyle.NONE },
+   272→   272→    insideVertical: { style: BorderStyle.NONE },
+   273→   273→  },
+   274→   274→  rows: [
+   275→   275→    new TableRow({
+   276→   276→      children: headerCells.map(text => new TableCell({
+   277→   277→        children: [new Paragraph({ children: [new TextRun({ text, bold: true, size: 21 })] })],
+   278→   278→        borders: {
+   279→   279→          bottom: { style: BorderStyle.SINGLE, size: 2, color: "000000" },
+   280→   280→          top: { style: BorderStyle.NONE },
+   281→   281→          left: { style: BorderStyle.NONE },
+   282→   282→          right: { style: BorderStyle.NONE },
+   283→   283→        },
+   284→   284→        margins: { top: 60, bottom: 60, left: 120, right: 120 },
+   285→   285→      })),
+   286→   286→    }),
+   287→   287→    // ... data rows with all borders NONE
+   288→   288→  ],
+   289→   289→});
+   290→   290→```
+   291→   291→
+   292→   292→### 2. Zebra Stripe — Data Reports
+   293→   293→
+   294→   294→```js
+   295→   295→function zebraRow(cells, index, palette) {
+   296→   296→  return new TableRow({
+   297→   297→    children: cells.map(text => new TableCell({
+   298→   298→      children: [new Paragraph({ children: [new TextRun({ text, size: 21 })] })],
+   299→   299→      shading: index % 2 === 0
+   300→   300→        ? { type: ShadingType.CLEAR, fill: palette.surface }
+   301→   301→        : { type: ShadingType.CLEAR, fill: "FFFFFF" },
+   302→   302→      margins: { top: 60, bottom: 60, left: 120, right: 120 },
+   303→   303→    })),
+   304→   304→  });
+   305→   305→}
+   306→   306→```
+   307→   307→
+   308→   308→### 3. Horizontal-Only — Business (Default)
+   309→   309→
+   310→   310→```js
+   311→   311→const horizontalTable = new Table({
+   312→   312→  width: { size: 100, type: WidthType.PERCENTAGE },
+   313→   313→  borders: {
+   314→   314→    top: { style: BorderStyle.SINGLE, size: 2, color: palette.accent.replace("#","") },
+   315→   315→    bottom: { style: BorderStyle.SINGLE, size: 2, color: palette.accent.replace("#","") },
+   316→   316→    left: { style: BorderStyle.NONE },
+   317→   317→    right: { style: BorderStyle.NONE },
+   318→   318→    insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: "D0D0D0" },
+   319→   319→    insideVertical: { style: BorderStyle.NONE },
+   320→   320→  },
+   321→   321→  rows: [/* header row with accent shading, then data rows */],
+   322→   322→});
+   323→   323→```
+   324→   324→
+   325→   325→**⚠️ CRITICAL**: Always set `margins` at the Table or TableCell level. Without margins, text touches cell borders.
+   326→   326→
+   327→   327→### Table Color Token Derivation
+   328→   328→
+   329→   329→Each palette in `coverPalettes` provides a `table` object with pre-computed colors for all 3 table styles:
+   330→   330→
+   331→   331→| Token | Used in | Description |
+   332→   332→|-------|---------|-------------|
+   333→   333→| `table.headerBg` | Zebra Stripe, Horizontal-Only | Table header background color |
+   334→   334→| `table.headerText` | Zebra Stripe, Horizontal-Only | Table header text color (must pass WCAG AA contrast) |
+   335→   335→| `table.accentLine` | Three-Line | Top/bottom/header-bottom line color |
+   336→   336→| `table.innerLine` | Horizontal-Only | Inner horizontal separator line color |
+   337→   337→| `table.surface` | Zebra Stripe | Alternating row background (light tint) |
+   338→   338→
+   339→   339→**Usage:**
+   340→   340→```js
+   341→   341→const palette = coverPalettes["DS-1"];
+   342→   342→const t = palette.table;
+   343→   343→// Three-Line: use t.accentLine for border colors
+   344→   344→// Zebra: use t.headerBg, t.headerText, t.surface
+   345→   345→// Horizontal: use t.headerBg, t.headerText, t.innerLine
+   346→   346→```
+   347→   347→
+   348→   348→**⚠️ High-saturation accent override**: For DM-1, FG-1, and SN-2, the table colors are intentionally darkened/desaturated relative to the cover accent. Bright accent colors that look good on dark cover backgrounds are too eye-straining on white body pages. Always use `palette.table.*` for tables, never the raw `palette.accent`.
+   349→   349→
+   350→   350→---
+   351→   351→---
+   352→   352→
+   353→   353→## Cover Page Design System
+   354→   354→
+   355→   355→### Design Philosophy
+   356→   356→
+   357→   357→Covers use **7 validated layout recipes** + **parameterized variants** instead of free combination. Each recipe's background, layout, and decoration are visually verified. Differentiation comes from **palette × font size × content variation**.
+   358→   358→
+   359→   359→**Architecture principle:** All recipes use a **single 16838 outer wrapper table** (one row, exact height). Recipes R1/R2/R3 use **ZERO nested tables** — all decoration is achieved via **paragraph borders** (left/right/top/bottom). This ensures maximum cross-engine stability (MS Office + WPS).
+   360→   360→
+   361→   361→### Cover Color Palettes (Dark Mode + Light Mode)
+   362→   362→
+   363→   363→Each palette defines 3 core colors (Background, Primary, Accent) + derived cover/table tokens.
+   364→   364→
+   365→   365→⚠️ **Disambiguation: `cover.titleColor` is a COLOR value, not title text.** All keys under `cover: { ... }` are **color hex codes** for styling cover text elements. They are NOT text content. The actual title text comes from `config.title`. Never use `P.titleColor` as the `text` parameter of a `TextRun` — it must only be used as the `color` parameter.
+   366→   366→
+   367→   367→```js
+   368→   368→// ✅ Correct — config.title is the text, P.titleColor is the color
+   369→   369→new TextRun({ text: config.title, color: P.titleColor })
+   370→   370→
+   371→   371→// ❌ WRONG — using color value as text content
+   372→   372→new TextRun({ text: P.titleColor, color: P.titleColor })  // displays "FFFFFF" as visible text!
+   373→   373→```
+   374→   374→
+   375→   375→```js
+   376→   376→const coverPalettes = {
+   377→   377→  // ── Light backgrounds (7) ──
+   378→   378→  "WM-1": { // Warm Teal — education, training, marketing
+   379→   379→    bg: "F4F1E9", primary: "15857A", accent: "FF6A3B",
+   380→   380→    cover: { titleColor: "15857A", subtitleColor: "606060", metaColor: "707070", footerColor: "A0A0A0" },
+   381→   381→    table: { headerBg: "15857A", headerText: "FFFFFF", accentLine: "15857A", innerLine: "D5D0C8", surface: "F0EDE5" },
+   382→   382→  },
+   383→   383→  "CM-2": { // Blue Orange — tech, corporate, whitepaper
+   384→   384→    bg: "FEFEFE", primary: "1284BA", accent: "FF862F",
+   385→   385→    cover: { titleColor: "1284BA", subtitleColor: "606060", metaColor: "707070", footerColor: "A0A0A0" },
+   386→   386→    table: { headerBg: "1284BA", headerText: "FFFFFF", accentLine: "1284BA", innerLine: "D8E4EC", surface: "EDF4F9" },
+   387→   387→  },
+   388→   388→  "SN-2": { // Soft Purple — creative, branding, events (⚠️ NOT for business)
+   389→   389→    bg: "EBDCEF", primary: "73593C", accent: "B13DC6",
+   390→   390→    cover: { titleColor: "73593C", subtitleColor: "606060", metaColor: "707070", footerColor: "A0A0A0" },
+   391→   391→    table: { headerBg: "7A4D8A", headerText: "FFFFFF", accentLine: "7A4D8A", innerLine: "D8D0DE", surface: "F2EDF5" },
+   392→   392→  },
+   393→   393→  "MIN-1": { // Warm Gold — consulting, minimalist business, premium proposals
+   394→   394→    bg: "F3F1ED", primary: "000000", accent: "D6C096",
+   395→   395→    cover: { titleColor: "000000", subtitleColor: "606060", metaColor: "707070", footerColor: "A0A0A0" },
+   396→   396→    table: { headerBg: "D6C096", headerText: "1A1A1A", accentLine: "000000", innerLine: "DDD8CC", surface: "F5F3ED" },
+   397→   397→  },
+   398→   398→  "WR-2": { // Retro Green — traditional industry, finance compliance, legal
+   399→   399→    bg: "F4F1E9", primary: "2A4A3A", accent: "C89F62",
+   400→   400→    cover: { titleColor: "2A4A3A", subtitleColor: "606060", metaColor: "707070", footerColor: "A0A0A0" },
+   401→   401→    table: { headerBg: "2A4A3A", headerText: "FFFFFF", accentLine: "2A4A3A", innerLine: "D0D8D0", surface: "F0EDE5" },
+   402→   402→  },
+   403→   403→  "MC-1": { // Medical Blue — healthcare, clinical reports
+   404→   404→    bg: "F5F8FC", primary: "1A5276", accent: "2E86C1",
+   405→   405→    cover: { titleColor: "1A5276", subtitleColor: "606060", metaColor: "707070", footerColor: "A0A0A0" },
+   406→   406→    table: { headerBg: "2E86C1", headerText: "FFFFFF", accentLine: "1A5276", innerLine: "D0DDE8", surface: "EDF3F8" },
+   407→   407→  },
+   408→   408→  "GV-1": { // Official Red — government, state-owned enterprise, party building
+   409→   409→    bg: "FAFAFA", primary: "1A1A1A", accent: "C0392B",
+   410→   410→    cover: { titleColor: "1A1A1A", subtitleColor: "606060", metaColor: "707070", footerColor: "A0A0A0" },
+   411→   411→    table: { headerBg: "C0392B", headerText: "FFFFFF", accentLine: "C0392B", innerLine: "DDD0D0", surface: "F8F0F0" },
+   412→   412→  },
+   413→   413→
+   414→   414→  // ── Dark backgrounds (5) ──
+   415→   415→  "DS-1": { // Deep Sea — annual report, general business
+   416→   416→    bg: "0B1C2C", primary: "FFFFFF", accent: "529286",
+   417→   417→    cover: { titleColor: "FFFFFF", subtitleColor: "B0B8C0", metaColor: "90989F", footerColor: "687078" },
+   418→   418→    table: { headerBg: "529286", headerText: "FFFFFF", accentLine: "529286", innerLine: "BECFCC", surface: "E8ECEB" },
+   419→   419→  },
+   420→   420→  "IG-1": { // Ink Gold — finance, investment, luxury brand
+   421→   421→    bg: "1A1A1A", primary: "FFFFFF", accent: "C9A84C",
+   422→   422→    cover: { titleColor: "FFFFFF", subtitleColor: "B0B8C0", metaColor: "90989F", footerColor: "687078" },
+   423→   423→    table: { headerBg: "C9A84C", headerText: "1A1A1A", accentLine: "C9A84C", innerLine: "DDD5C0", surface: "F5F2E8" },
+   424→   424→  },
+   425→   425→  "DM-1": { // Deep Cyan — AI, tech proposals, digital transformation
+   426→   426→    bg: "162235", primary: "FFFFFF", accent: "37DCF2",
+   427→   427→    cover: { titleColor: "FFFFFF", subtitleColor: "B0B8C0", metaColor: "90989F", footerColor: "687078" },
+   428→   428→    // ⚠️ Table uses darkened accent (#1B6B7A) — bright #37DCF2 is too saturated for white-page tables
+   429→   429→    table: { headerBg: "1B6B7A", headerText: "FFFFFF", accentLine: "1B6B7A", innerLine: "C8DDE2", surface: "EDF3F5" },
+   430→   430→  },
+   431→   431→  "FG-1": { // Forest Mint — ESG, environmental, sustainability, agriculture
+   432→   432→    bg: "0C1F1A", primary: "FFFFFF", accent: "3DDBB5",
+   433→   433→    cover: { titleColor: "FFFFFF", subtitleColor: "B0B8C0", metaColor: "90989F", footerColor: "687078" },
+   434→   434→    // ⚠️ Table uses darkened accent (#2A7A65) — bright #3DDBB5 is too saturated for white-page tables
+   435→   435→    table: { headerBg: "2A7A65", headerText: "FFFFFF", accentLine: "2A7A65", innerLine: "C5D8D0", surface: "EDF5F2" },
+   436→   436→  },
+   437→   437→  "GO-1": { // Graphite Orange — proposals, bidding, PRD
+   438→   438→    bg: "1A2330", primary: "FFFFFF", accent: "D4875A",
+   439→   439→    cover: { titleColor: "FFFFFF", subtitleColor: "B0B8C0", metaColor: "90989F", footerColor: "687078" },
+   440→   440→    table: { headerBg: "D4875A", headerText: "FFFFFF", accentLine: "D4875A", innerLine: "DDD0C8", surface: "F8F0EB" },
+   441→   441→  },
+   442→   442→
+   443→   443→  // ── Special (R5 only) ──
+   444→   444→  "ED-1": { // Editorial Warm — lesson plans, cultural/creative, light reports, newsletters
+   445→   445→    bg: "F7F7F5", primary: "2C2C2C", accent: "D4D4D0",
+   446→   446→    cover: { titleColor: "2C2C2C", subtitleColor: "6B6B6B", metaColor: "9A9A9A", footerColor: "9A9A9A" },
+   447→   447→    table: { headerBg: "E8E8E4", headerText: "2C2C2C", accentLine: "D4D4D0", innerLine: "E8E8E4", surface: "FAFAF8" },
+   448→   448→    // Note: R6 exclusive. Minimal editorial style — warm grey tones, no colored headers.
+   449→   449→  },
+   450→   450→
+   451→   451→  "ST-1": { // Swiss Tech — cultural/creative research, trend reports, brand strategy
+   452→   452→    bg: "E2E8F0", primary: "0F172A", accent: "0042E6",
+   453→   453→    cover: { titleColor: "0F172A", subtitleColor: "475569", metaColor: "475569", footerColor: "475569" },
+   454→   454→    table: { headerBg: "475569", headerText: "FFFFFF", accentLine: "0042E6", innerLine: "CBD5E1", surface: "F1F5F9" },
+   455→   455→    // Note: R7 exclusive. Swiss minimalist — slate grey bg, Klein blue accent, open-frame tables.
+   456→   456→  },
+   457→   457→
+   458→   458→  "ACADEMIC": { // Academic Black — thesis, standards (R5 exclusive, not in general routing)
+   459→   459→    bg: "FFFFFF", primary: "000000", accent: "000000",
+   460→   460→    cover: { titleColor: "000000", subtitleColor: "404040", metaColor: "606060", footerColor: "808080" },
+   461→   461→    table: { headerBg: "000000", headerText: "000000", accentLine: "000000", innerLine: "000000", surface: "FFFFFF" },
+   462→   462→    // Note: Academic uses Three-Line table only, with pure black lines. No colored headers.
+   463→   463→  },
+   464→   464→};
+   465→   465→```
+   466→   466→
+   467→   467→### ⚠️ Dark Cover → Light Table Rule
+   468→   468→
+   469→   469→Covers with dark backgrounds (DS-1, IG-1, DM-1, FG-1, GO-1) use bright accent on dark bg.
+   470→   470→Body page tables are always on WHITE background — table colors use **darkened/desaturated** variants of the accent.
+   471→   471→High-saturation accent colors (DM-1 #37DCF2, FG-1 #3DDBB5, SN-2 #B13DC6) are explicitly overridden in `table.*` fields above.
+   472→   472→
+   473→   473→### ⚠️ SN-2 Scene Restriction
+   474→   474→
+   475→   475→SN-2 (Soft Purple) is restricted to creative/branding/event documents ONLY.
+   476→   476→It MUST NOT be used for: business reports, consulting, finance, legal, government, medical, or technical documents.
+   477→   477→
+   478→   478→### Industry → Palette Recommendations
+   479→   479→
+   480→   480→| Industry / Theme | Recommended Palette | Fallback |
+   481→   481→|-----------|---------|---------|
+   482→   482→| General annual report | DS-1 Deep Sea | CM-2 |
+   483→   483→| Finance / investment / luxury | IG-1 Ink Gold | WR-2, MIN-1 |
+   484→   484→| Tech / AI / internet | DM-1 Deep Cyan | CM-2 |
+   485→   485→| ESG / environmental / sustainability | FG-1 Forest Mint | DS-1 |
+   486→   486→| Consulting / diagnostic report | MIN-1 Warm Gold | WR-2 |
+   487→   487→| Business proposal / bidding / PRD | GO-1 Graphite Orange | CM-2 |
+   488→   488→| Education / training (formal) | WM-1 Warm Teal | CM-2 |
+   489→   489→| Lesson plan (arts/general) | ED-1 Editorial Warm | WM-1 |
+   490→   490→| Cultural / newsletter / internal | ED-1 Editorial Warm | WM-1 |
+   491→   491→| Events / activities | ED-1 Editorial Warm | WM-1 |
+   492→   492→| Medical / healthcare / clinical | MC-1 Medical Blue | CM-2 |
+   493→   493→| Government / state-owned / party | GV-1 Official Red | MIN-1 |
+   494→   494→| Traditional industry / legal / compliance | WR-2 Retro Green | MIN-1 |
+   495→   495→| Creative / branding (formal) | SN-2 Soft Purple | WM-1 |
+   496→   496→| Whitepaper (general) | CM-2 Blue Orange | DS-1, MIN-1 |
+   497→   497→| Academic / thesis / standards | ACADEMIC | — |
+   498→   498→
+   499→   499→---
+   500→   500→
+   501→   501→### ⚠️ Recipe Routing Rules (Replaces Free Selection)
+   502→   502→
+   503→   503→```js
+   504→   504→function selectCoverRecipe(docType, industry, titleLength) {
+   505→   505→  // No cover for these types
+   506→   506→  if (["contract", "official", "exam", "resume"].includes(docType)) return null;
+   507→   507→
+   508→   508→  // Academic
+   509→   509→  if (docType === "academic") return { recipe: "R5", palette: "ACADEMIC" };
+   510→   510→
+   511→   511→  // Thesis proposal report (开题报告)
+   512→   512→  if (docType === "proposal_report") return { recipe: "R5", palette: "ACADEMIC" };
+   513→   513→
+   514→   514→  // Lesson plans — R6 editorial for arts/general, R4 for STEM
+   515→   515→  if (docType === "lesson_plan" || docType === "lessonplan") {
+   516→   516→    const stemKeywords = ["math", "physics", "chemistry", "biology", "science", "tech", "computer", "engineering"];
+   517→   517→    if (stemKeywords.some(k => (industry || "").toLowerCase().includes(k))) {
+   518→   518→      return { recipe: "R4", palette: "DM-1" };
+   519→   519→    }
+   520→   520→    // Arts, general, and all other lesson plans → R6 editorial
+   521→   521→    return { recipe: "R6", palette: "ED-1" };
+   522→   522→  }
+   523→   523→
+   524→   524→  // Creative/branding/design (formal) → R3 centered card frame
+   525→   525→  if (["creative", "branding", "design"].includes(docType)) {
+   526→   526→    return { recipe: "R3", palette: "SN-2" };
+   527→   527→  }
+   528→   528→
+   529→   529→  // Cultural/newsletter/internal (casual) → R6 editorial
+   530→   530→  if (["cultural", "newsletter", "internal"].includes(docType)) {
+   531→   531→    return { recipe: "R6", palette: "ED-1" };
+   532→   532→  }
+   533→   533→
+   534→   534→  // Activity/event planning → R6 editorial
+   535→   535→  if (docType === "activity") return { recipe: "R6", palette: "ED-1" };
+   536→   536→
+   537→   537→  // Trend/research reports in cultural/creative/brand fields → R7 Swiss Tech
+   538→   538→  if (docType === "trend_report" || docType === "research_report") {
+   539→   539→    if (["cultural", "creative", "brand", "design"].includes(industry)) {
+   540→   540→      return { recipe: "R7", palette: "ST-1" };
+   541→   541→    }
+   542→   542→  }
+   543→   543→
+   544→   544→  // Formal/business subtypes
+   545→   545→  if (docType === "whitepaper") return { recipe: "R2", palette: industry === "finance" ? "IG-1" : "CM-2" };
+   546→   546→  if (docType === "consulting") return { recipe: "R2", palette: "MIN-1" };
+   547→   547→  if (docType === "proposal" || docType === "plan") return { recipe: "R4", palette: "GO-1" };
+   548→   548→
+   549→   549→  // Reports — palette by industry, use R1
+   550→   550→  if (docType === "report") {
+   551→   551→    const paletteMap = {
+   552→   552→      finance: "IG-1", consulting: "MIN-1",
+   553→   553→      tech: "DM-1", ai: "DM-1",
+   554→   554→      education: "WM-1", green: "FG-1",
+   555→   555→      medical: "MC-1", government: "GV-1",
+   556→   556→    };
+   557→   557→    return { recipe: "R1", palette: paletteMap[industry] || "DS-1" };
+   558→   558→  }
+   559→   559→
+   560→   560→  // Default
+   561→   561→  return { recipe: "R1", palette: "DS-1" };
+   562→   562→}
+   563→   563→
+   564→   564→// ── Long-title override (applied AFTER initial recipe selection) ──
+   565→   565→// Call this after selectCoverRecipe() when the actual title text is known.
+   566→   566→function applyLongTitleOverride(result, titleLength) {
+   567→   567→  if (!result || !result.recipe) return result;
+   568→   568→  // R5 (academic) is never overridden — it has its own calcTitleLayoutMixed()
+   569→   569→  if (result.recipe === "R5") return result;
+   570→   570→  // R6 (editorial) is designed for short titles only (≤20 chars, single line)
+   571→   571→  // Long titles → fall back to R1 (handles long titles best)
+   572→   572→  if (titleLength > 20 && result.recipe === "R6") {
+   573→   573→    return { recipe: "R1", palette: "WM-1" }; // ED-1 has no dark bg, use WM-1 (warm teal)
+   574→   574→  }
+   575→   575→  // R3/R4 struggle with long titles → fall back to R1 (same palette)
+   576→   576→  if (titleLength > 20 && ["R3", "R4"].includes(result.recipe)) {
+   577→   577→    return { recipe: "R1", palette: result.palette };
+   578→   578→  }
+   579→   579→  // Very long titles: even R2 centered looks scattered → R1 left-aligned
+   580→   580→  if (titleLength > 30 && result.recipe === "R2") {
+   581→   581→    return { recipe: "R1", palette: result.palette };
+   582→   582→  }
+   583→   583→  return result;
+   584→   584→}
+   585→   585→```
+   586→   586→
+   587→   587→### Scene Cover Routing
+   588→   588→
+   589→   589→| Scene | Recipe | Default Palette | Special Requirements |
+   590→   590→|------|------|---------|----------|
+   591→   591→| academic thesis | R5 (Clean White) | ACADEMIC | School name + 2-col meta table with underlines, see academic.md |
+   592→   592→| thesis proposal report (开题报告) | R5 (Clean White) | ACADEMIC | Use `buildProposalCover()` from academic.md |
+   593→   593→| business report (general) | R1 (Pure Paragraph Left) | DS-1 Deep Sea | Auto-select palette by industry |
+   594→   594→| whitepaper | R2 (Double-Rule Frame) | CM-2 Blue Orange / IG-1 Ink Gold | — |
+   595→   595→| consulting report | R2 (Double-Rule Frame) | MIN-1 Warm Gold | — |
+   596→   596→| business proposal / plan | R4 (Top Color Block) | GO-1 Graphite Orange | — |
+   597→   597→| events / activities | R6 (Editorial Warm) | ED-1 Editorial Warm | Light/casual style, short titles only (≤20 chars) |
+   598→   598→| lesson plan (STEM) | R4 (Top Color Block) | DM-1 Deep Cyan | Route by subject, see selectCoverRecipe |
+   599→   599→| lesson plan (arts/general) | R6 (Editorial Warm) | ED-1 Editorial Warm | Casual editorial style, short titles only |
+   600→   600→| creative / branding / design (formal) | R3 (Centered Card Frame) | SN-2 Soft Purple | Product overview, brand doc, design report |
+
+[showing lines 1-600 of 1798; use offset=601 with limit to continue reading]
