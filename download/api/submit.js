@@ -7,7 +7,11 @@
 // Once the env var is set, redeploy (push any commit or click Redeploy in Vercel dashboard).
 
 const RECIPIENT_EMAIL = "simon.childs@optitude360.com";
-const FROM_EMAIL = "Optitude AI <downloads@optitude360connect.com>";
+// Using Resend's onboarding address — works without domain verification, but only sends to the
+// email you signed up with (Simon's). All lead notifications go to Simon, so this is sufficient.
+// To use a custom from-address (e.g. downloads@optitude360.com), verify the domain at
+// https://resend.com/domains and update this constant.
+const FROM_EMAIL = "Optitude AI <onboarding@resend.dev>";
 const THANK_YOU_URL = "https://periodic-table.optitudeai.com/thank-you";
 const ERROR_URL = "https://periodic-table.optitudeai.com/?error=1";
 
