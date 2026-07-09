@@ -860,21 +860,13 @@
         </div>
 
         <div class="form-card">
-          <!-- FormSubmit.co sends submissions to simon.childs@optitude360.com.
-               Uses regular POST (not AJAX) to avoid CORS issues with FormSubmit's /ajax/ endpoint.
-               On submit, browser navigates to FormSubmit → FormSubmit emails Simon → redirects to /thank-you.
-               First ever submission triggers an activation email to simon.childs@optitude360.com that must be clicked once. -->
-          <form id="download-form" action="https://formsubmit.co/simon.childs@optitude360.com" method="POST" novalidate>
+          <!-- Form POSTs to our own Vercel serverless function at /api/submit.
+               The function sends an email to simon.childs@optitude360.com via Resend,
+               then redirects the visitor to /thank-you where the PDF is served.
+               No third-party form service involved — fully under our control. -->
+          <form id="download-form" action="/api/submit" method="POST" novalidate>
             <h3>Download the guide</h3>
             <p class="form-subtitle">Free PDF — takes 30 seconds.</p>
-
-            <!-- FormSubmit configuration (hidden) -->
-            <input type="hidden" name="_subject" value="New download — Periodic Table of AI Elements">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_next" value="https://periodic-table.optitudeai.com/thank-you">
-            <!-- After activation, replace the email above with the hashed version FormSubmit provides
-                 to stop the address being scrapeable from the HTML. -->
 
             <div class="form-row">
               <div class="form-field">
