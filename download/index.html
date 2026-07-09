@@ -437,10 +437,23 @@
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
     .form-field input:focus,
-    .form-field select:focus {
+    .form-field select:focus,
+    .form-field textarea:focus {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
+    }
+    .form-field textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 15px; font-family: inherit;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      resize: vertical;
+      min-height: 90px;
     }
     .form-field select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B6B6B' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
 
@@ -488,16 +501,6 @@
       border-color: var(--border);
     }
     .form-success .btn-secondary:hover { background: var(--border); }
-
-    /* ============ AFTER-DOWNLOAD CTA ============ */
-    .after-cta {
-      background: var(--bg-alt);
-      border-top: 1px solid var(--border);
-      text-align: center;
-    }
-    .after-cta .container-narrow { max-width: 760px; }
-    .after-cta h2 { margin-bottom: 16px; }
-    .after-cta p { font-size: 17px; margin-bottom: 32px; }
 
     /* ============ FAQ ============ */
     .faq-section { background: var(--bg); }
@@ -569,18 +572,14 @@
     }
   </style>
 </head>
-<body>
+<body id="top">
 
   <!-- ============ HEADER ============ -->
   <header class="site-header">
     <div class="container">
-      <a href="https://www.optitudeai.com/" class="logo">Optitude<span>AI</span></a>
+      <a href="#top" class="logo">Optitude<span>AI</span></a>
       <nav class="nav-links">
-        <a href="https://www.optitudeai.com/#products">Readiness Review</a>
-        <a href="https://www.optitudeai.com/#products">Training</a>
-        <a href="https://www.optitudeai.com/#governance">Governance</a>
-        <a href="https://www.optitudeai.com/#proof">Insights</a>
-        <a href="mailto:simon.childs@optitude360.com?subject=AI%20Opportunity%20Review" class="nav-cta">Book a Review</a>
+        <a href="#book-a-review" class="nav-cta">Book a Review</a>
       </nav>
     </div>
   </header>
@@ -596,7 +595,7 @@
         <p class="hero-subhead">AI is everywhere, but most UK businesses are still figuring out where it actually creates value. Optitude AI's Periodic Table of AI Elements organises 48 practical AI concepts into eight clear groups — so you can see, at a glance, where AI could save time, reduce manual workload, and strengthen decision-making across your organisation.</p>
         <div class="hero-ctas">
           <a href="#download" class="btn btn-primary btn-large">Download the Periodic Table of AI Elements</a>
-          <a href="mailto:simon.childs@optitude360.com?subject=AI%20Opportunity%20Review" class="btn btn-secondary">Book an AI Opportunity Review</a>
+          <a href="#book-a-review" class="btn btn-secondary">Book an AI Opportunity Review</a>
         </div>
       </div>
       <div class="hero-visual" role="img" aria-label="The Periodic Table of AI Elements by Optitude AI, showing 48 AI concepts arranged in eight colour-coded groups from Fundamentals to Business Layer.">
@@ -753,11 +752,11 @@
       <h3>What we do</h3>
       <div class="services-grid">
         <div class="service-item">
-          <h4><a href="https://www.optitudeai.com/#products">AI readiness reviews</a></h4>
+          <h4>AI readiness reviews</h4>
           <p>A structured assessment of where your business is today and what would need to be true before AI creates reliable value.</p>
         </div>
         <div class="service-item">
-          <h4><a href="https://www.optitudeai.com/#products">AI opportunity mapping</a></h4>
+          <h4>AI opportunity mapping</h4>
           <p>Identifying and prioritising the highest-leverage use cases across your organisation.</p>
         </div>
         <div class="service-item">
@@ -765,19 +764,19 @@
           <p>Mapping current processes so AI is fitted to how you actually work, not the other way around.</p>
         </div>
         <div class="service-item">
-          <h4><a href="https://www.optitudeai.com/#products">AI productivity improvement</a></h4>
+          <h4>AI productivity improvement</h4>
           <p>Targeting measurable time savings in admin-heavy, repeatable tasks.</p>
         </div>
         <div class="service-item">
-          <h4><a href="https://www.optitudeai.com/#products">AI training for teams and leaders</a></h4>
+          <h4>AI training for teams and leaders</h4>
           <p>Practical, role-relevant sessions that build confidence and competence without technical backgrounds.</p>
         </div>
         <div class="service-item">
-          <h4><a href="https://www.optitudeai.com/#governance">AI policy and governance support</a></h4>
+          <h4>AI policy and governance support</h4>
           <p>Safe-usage policies, data handling principles, and approval workflows that reduce risk from unstructured AI use.</p>
         </div>
         <div class="service-item">
-          <h4><a href="https://www.optitudeai.com/#products">Recruitment and HR process improvement</a></h4>
+          <h4>Recruitment and HR process improvement</h4>
           <p>Applying AI to sourcing, screening, onboarding and people analytics with appropriate human oversight.</p>
         </div>
         <div class="service-item">
@@ -839,7 +838,7 @@
         </div>
       </div>
 
-      <p style="margin-top: 40px;"><a href="mailto:simon.childs@optitude360.com?subject=AI%20Opportunity%20Review" class="btn btn-primary">Talk to Optitude AI about your AI roadmap →</a></p>
+      <p style="margin-top: 40px;"><a href="#book-a-review" class="btn btn-primary">Talk to Optitude AI about your AI roadmap →</a></p>
     </div>
   </section>
 
@@ -950,21 +949,80 @@
             <h3>Check your inbox</h3>
             <p>Your download link is on its way. If you don't see it within 5 minutes, check your spam folder.</p>
             <p style="font-size: 14px; color: var(--text-muted);">Want to understand where AI could create value in your business in the meantime?</p>
-            <p style="margin-top: 16px;"><a href="mailto:simon.childs@optitude360.com?subject=AI%20Opportunity%20Review" class="btn btn-secondary">Book an AI Opportunity Review →</a></p>
+            <p style="margin-top: 16px;"><a href="#book-a-review" class="btn btn-secondary">Book an AI Opportunity Review →</a></p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ AFTER-DOWNLOAD CTA ============ -->
-  <section class="after-cta" id="after-cta">
-    <div class="container-narrow">
-      <span class="section-eyebrow">Next step</span>
-      <h2>Want to understand where AI could create value in your business?</h2>
-      <p>The Periodic Table of AI Elements gives you the framework. The AI Opportunity Review turns it into a plan. In a focused session, an Optitude AI consultant will walk through your business with you, identify two or three high-leverage use cases, and outline what implementation would actually look like — timeline, effort, expected return, and risk.</p>
-      <p>There is no obligation to proceed, and you'll come away with a clearer picture regardless.</p>
-      <a href="mailto:simon.childs@optitude360.com?subject=AI%20Opportunity%20Review" class="btn btn-primary btn-large">Book an AI Opportunity Review with Optitude AI</a>
+  <!-- ============ BOOK AN AI OPPORTUNITY REVIEW ============ -->
+  <section class="form-section" id="book-a-review">
+    <div class="container">
+      <div class="form-wrap">
+        <div class="form-intro">
+          <span class="section-eyebrow">Book an AI Opportunity Review</span>
+          <h2>Want to understand where AI could create value in your business?</h2>
+          <p>The Periodic Table of AI Elements gives you the framework. The AI Opportunity Review turns it into a plan. In a focused session, an Optitude AI consultant will walk through your business with you, identify two or three high-leverage use cases, and outline what implementation would actually look like — timeline, effort, expected return, and risk.</p>
+          <ul>
+            <li><strong>30-minute focused session</strong> — by phone or video, at a time that suits you.</li>
+            <li><strong>No obligation</strong> — you'll come away with a clearer picture regardless of whether you proceed.</li>
+            <li><strong>Practical, not generic</strong> — we focus on your business, your workflows, your priorities.</li>
+            <li><strong>Direct follow-up</strong> — Simon will personally reply to your request within 1 business day.</li>
+          </ul>
+        </div>
+
+        <div class="form-card">
+          <form id="booking-form" action="/api/submit" method="POST" novalidate>
+            <h3>Book your AI Opportunity Review</h3>
+            <p class="form-subtitle">Takes 30 seconds — Simon will personally reply within 1 business day.</p>
+
+            <!-- Hidden: mark this as a booking inquiry (not a guide download) -->
+            <input type="hidden" name="inquiryType" value="booking">
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="booking-firstName">First name <span style="color:#C0392B">*</span></label>
+                <input type="text" id="booking-firstName" name="firstName" required autocomplete="given-name" placeholder="Sarah">
+              </div>
+              <div class="form-field">
+                <label for="booking-lastName">Last name <span class="optional">(optional)</span></label>
+                <input type="text" id="booking-lastName" name="lastName" autocomplete="family-name" placeholder="Patel">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="booking-email">Work email <span style="color:#C0392B">*</span></label>
+              <input type="email" id="booking-email" name="email" required autocomplete="email" placeholder="name@company.co.uk">
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="booking-company">Company name <span style="color:#C0392B">*</span></label>
+                <input type="text" id="booking-company" name="company" required autocomplete="organization" placeholder="Northbridge Logistics Ltd">
+              </div>
+              <div class="form-field">
+                <label for="booking-jobTitle">Job title <span class="optional">(optional)</span></label>
+                <input type="text" id="booking-jobTitle" name="jobTitle" autocomplete="organization-title" placeholder="Operations Director">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="booking-message">What would you like to get out of the review? <span class="optional">(optional)</span></label>
+              <textarea id="booking-message" name="message" rows="4" placeholder="e.g. We've started using ChatGPT in pockets but don't have a structured plan. We'd like to identify two or three high-leverage use cases for our operations team."></textarea>
+            </div>
+
+            <p class="form-disclaimer">By submitting this form, you agree that Optitude AI may process your information to respond to your booking request. You can unsubscribe from marketing emails at any time. Please see our <a href="mailto:simon.childs@optitude360.com?subject=Privacy%20policy%20request">Privacy Policy</a> for details on how we handle your information.</p>
+
+            <!-- Honeypot field for spam protection (hidden from users) -->
+            <div style="position:absolute;left:-9999px;" aria-hidden="true">
+              <label>Leave this field empty: <input type="text" name="_honey" tabindex="-1" autocomplete="off"></label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="booking-submit-btn">Request my AI Opportunity Review</button>
+          </form>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1033,30 +1091,30 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="https://www.optitudeai.com/" class="logo">Optitude<span>AI</span></a>
+          <a href="#top" class="logo">Optitude<span>AI</span></a>
           <p>Practical AI consultancy helping UK businesses apply AI intelligently, commercially, and safely — from AI curiosity to practical implementation.</p>
         </div>
         <div class="footer-col">
-          <h5>Services</h5>
-          <a href="https://www.optitudeai.com/#products">Readiness Review</a>
-          <a href="https://www.optitudeai.com/#products">Opportunity Mapping</a>
-          <a href="https://www.optitudeai.com/#products">Training</a>
-          <a href="https://www.optitudeai.com/#governance">Policy &amp; Governance</a>
-          <a href="https://www.optitudeai.com/#products">Productivity</a>
+          <h5>On this page</h5>
+          <a href="#why">Why this guide matters</a>
+          <a href="#what-you-get">What you'll get</a>
+          <a href="#about">About Optitude AI</a>
+          <a href="#why-work-with-us">Why work with us</a>
+          <a href="#download">Download the guide</a>
+          <a href="#book-a-review">Book an AI Opportunity Review</a>
+          <a href="#faq">FAQs</a>
         </div>
         <div class="footer-col">
-          <h5>By Function</h5>
-          <a href="https://www.optitudeai.com/#products">AI for HR</a>
-          <a href="https://www.optitudeai.com/#products">AI for Recruitment</a>
-          <a href="https://www.optitudeai.com/#products">AI for Leadership</a>
-          <a href="https://www.optitudeai.com/#proof">Practical AI for Business</a>
-        </div>
-        <div class="footer-col">
-          <h5>Company</h5>
-          <a href="https://www.optitudeai.com/#chair">About</a>
-          <a href="https://www.optitudeai.com/#proof">Insights</a>
-          <a href="mailto:simon.childs@optitude360.com?subject=AI%20Opportunity%20Review">Book a Review</a>
+          <h5>Get in touch</h5>
+          <a href="#book-a-review">Book an AI Opportunity Review</a>
+          <a href="mailto:simon.childs@optitude360.com?subject=Optitude%20AI%20enquiry">Email Optitude AI</a>
           <a href="mailto:simon.childs@optitude360.com?subject=Privacy%20policy%20request">Privacy Policy</a>
+        </div>
+        <div class="footer-col">
+          <h5>Legal</h5>
+          <a href="mailto:simon.childs@optitude360.com?subject=Privacy%20policy%20request">Privacy</a>
+          <a href="mailto:simon.childs@optitude360.com?subject=Terms%20request">Terms</a>
+          <a href="mailto:simon.childs@optitude360.com?subject=Cookie%20policy%20request">Cookies</a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -1068,15 +1126,12 @@
 
   <!-- ============ Analytics + Form Script ============ -->
   <script>
-    // Form submission handler — validates client-side, then lets the browser
-    // submit the form natively to FormSubmit (regular POST, no AJAX).
-    // FormSubmit processes the submission, emails Simon.Childs@optitude360.com,
-    // and redirects the browser to the _next URL (our /thank-you page).
-    (function() {
-      var form = document.getElementById('download-form');
-      var submitBtn = document.getElementById('submit-btn');
-
-      if (!form) return;
+    // Generic form validation handler — used by both the download form and the booking form.
+    // Both forms POST natively to /api/submit (Vercel serverless function) which sends the email.
+    function setupForm(formId, submitBtnId, requiredFields, eventName, eventLabel) {
+      var form = document.getElementById(formId);
+      var submitBtn = document.getElementById(submitBtnId);
+      if (!form || !submitBtn) return;
 
       form.addEventListener('submit', function(e) {
         // Honeypot check — if filled, silently abort (looks like a bot)
@@ -1085,38 +1140,54 @@
           return;
         }
 
-        // Basic validation — if invalid, prevent submit and alert the user
-        if (!form.firstName.value.trim() || !form.email.value.trim() ||
-            !form.company.value.trim() || !form.aiChallenge.value) {
+        // Validate required fields
+        var missing = [];
+        for (var i = 0; i < requiredFields.length; i++) {
+          var field = form[requiredFields[i]];
+          if (!field || !field.value || !field.value.trim()) {
+            missing.push(requiredFields[i]);
+          }
+        }
+        if (missing.length > 0) {
           e.preventDefault();
-          alert('Please complete all required fields (First name, Work email, Company name, Main AI challenge).');
+          alert('Please complete all required fields: ' + missing.join(', ') + '.');
           return;
         }
 
         // Email format check
         var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRe.test(form.email.value.trim())) {
+        if (form.email && !emailRe.test(form.email.value.trim())) {
           e.preventDefault();
           alert('Please enter a valid work email address.');
           return;
         }
 
-        // If we got here, validation passed — let the form submit natively.
-        // Update button to show "Sending…" state (the browser will navigate away shortly).
+        // Validation passed — let the form submit natively.
+        // Update button to show "Sending…" state.
         submitBtn.disabled = true;
         submitBtn.textContent = 'Sending…';
         submitBtn.style.opacity = '0.7';
 
         // GA4 conversion event — fires just before navigation away
         if (typeof gtag === 'function') {
-          gtag('event', 'guide_download', {
+          gtag('event', eventName, {
             'event_category': 'engagement',
-            'event_label': 'periodic_table_of_ai_elements',
+            'event_label': eventLabel,
             'value': 1
           });
         }
       });
-    })();
+    }
+
+    // Download form — 4 mandatory fields
+    setupForm('download-form', 'submit-btn',
+              ['firstName', 'email', 'company', 'aiChallenge'],
+              'guide_download', 'periodic_table_of_ai_elements');
+
+    // Booking form — 3 mandatory fields (no aiChallenge)
+    setupForm('booking-form', 'booking-submit-btn',
+              ['firstName', 'email', 'company'],
+              'booking_request', 'ai_opportunity_review');
   </script>
 
   <!-- ============ GA4 (replace G-XXXXXXXXXX with real ID) ============ -->

@@ -312,13 +312,9 @@
   <!-- ============ HEADER ============ -->
   <header class="site-header">
     <div class="container">
-      <a href="https://www.optitudeai.com/" class="logo">Optitude<span>AI</span></a>
+      <a href="https://periodic-table.optitudeai.com/#top" class="logo">Optitude<span>AI</span></a>
       <nav class="nav-links">
-        <a href="https://www.optitudeai.com/#products">Readiness Review</a>
-        <a href="https://www.optitudeai.com/#products">Training</a>
-        <a href="https://www.optitudeai.com/#governance">Governance</a>
-        <a href="https://www.optitudeai.com/#proof">Insights</a>
-        <a href="mailto:simon.childs@optitude360.com?subject=AI%20Opportunity%20Review" class="nav-cta">Book a Review</a>
+        <a href="https://periodic-table.optitudeai.com/#book-a-review" class="nav-cta">Book a Review</a>
       </nav>
     </div>
   </header>
@@ -384,14 +380,14 @@
           <span class="step-num">Step 03 · Act on it</span>
           <h3>Book an AI Opportunity Review</h3>
           <p>The guide gives you the framework. The Opportunity Review turns it into a plan — two or three high-leverage use cases for your business, with timeline, effort, expected return, and risk. No obligation.</p>
-          <a href="mailto:simon.childs@optitude360.com?subject=AI%20Opportunity%20Review" class="btn btn-primary">Book an AI Opportunity Review →</a>
+          <a href="https://periodic-table.optitudeai.com/#book-a-review" class="btn btn-primary">Book an AI Opportunity Review →</a>
         </div>
 
         <div class="next-step-card">
           <span class="step-num">Step 04 · Go deeper</span>
           <h3>Explore Optitude AI services</h3>
           <p>When you're ready to move from framework to implementation, our readiness reviews, opportunity mapping, training, and governance support cover the full adoption lifecycle.</p>
-          <a href="https://www.optitudeai.com/#products" class="btn btn-secondary">See services →</a>
+          <a href="https://periodic-table.optitudeai.com/#book-a-review" class="btn btn-secondary">See services →</a>
         </div>
 
       </div>
@@ -403,7 +399,7 @@
     <div class="container-narrow">
       <h2>Want to understand where AI could create value in your business?</h2>
       <p>The Periodic Table of AI Elements gives you the framework. The AI Opportunity Review turns it into a plan. In a focused session, an Optitude AI consultant will walk through your business with you, identify two or three high-leverage use cases, and outline what implementation would actually look like.</p>
-      <a href="mailto:simon.childs@optitude360.com?subject=AI%20Opportunity%20Review" class="btn btn-primary btn-large">Book an AI Opportunity Review with Optitude AI</a>
+      <a href="https://periodic-table.optitudeai.com/#book-a-review" class="btn btn-primary btn-large">Book an AI Opportunity Review with Optitude AI</a>
     </div>
   </section>
 
@@ -414,30 +410,25 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="https://www.optitudeai.com/" class="logo">Optitude<span>AI</span></a>
+          <a href="https://periodic-table.optitudeai.com/#top" class="logo">Optitude<span>AI</span></a>
           <p>Practical AI consultancy helping UK businesses apply AI intelligently, commercially, and safely — from AI curiosity to practical implementation.</p>
         </div>
         <div class="footer-col">
-          <h5>Services</h5>
-          <a href="https://www.optitudeai.com/#products">Readiness Review</a>
-          <a href="https://www.optitudeai.com/#products">Opportunity Mapping</a>
-          <a href="https://www.optitudeai.com/#products">Training</a>
-          <a href="https://www.optitudeai.com/#governance">Policy &amp; Governance</a>
-          <a href="https://www.optitudeai.com/#products">Productivity</a>
+          <h5>Continue</h5>
+          <a href="https://periodic-table.optitudeai.com/#top">Back to the landing page</a>
+          <a href="https://periodic-table.optitudeai.com/#book-a-review">Book an AI Opportunity Review</a>
+          <a href="https://periodic-table.optitudeai.com/#faq">FAQs</a>
         </div>
         <div class="footer-col">
-          <h5>By Function</h5>
-          <a href="https://www.optitudeai.com/#products">AI for HR</a>
-          <a href="https://www.optitudeai.com/#products">AI for Recruitment</a>
-          <a href="https://www.optitudeai.com/#products">AI for Leadership</a>
-          <a href="https://www.optitudeai.com/#proof">Practical AI for Business</a>
-        </div>
-        <div class="footer-col">
-          <h5>Company</h5>
-          <a href="https://www.optitudeai.com/#chair">About</a>
-          <a href="https://www.optitudeai.com/#proof">Insights</a>
-          <a href="mailto:simon.childs@optitude360.com?subject=AI%20Opportunity%20Review">Book a Review</a>
+          <h5>Get in touch</h5>
+          <a href="mailto:simon.childs@optitude360.com?subject=Optitude%20AI%20enquiry">Email Optitude AI</a>
           <a href="mailto:simon.childs@optitude360.com?subject=Privacy%20policy%20request">Privacy Policy</a>
+        </div>
+        <div class="footer-col">
+          <h5>Legal</h5>
+          <a href="mailto:simon.childs@optitude360.com?subject=Privacy%20policy%20request">Privacy</a>
+          <a href="mailto:simon.childs@optitude360.com?subject=Terms%20request">Terms</a>
+          <a href="mailto:simon.childs@optitude360.com?subject=Cookie%20policy%20request">Cookies</a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -447,38 +438,53 @@
     </div>
   </footer>
 
-  <!-- ============ Script: Auto-trigger download + GA4 ============ -->
+  <!-- ============ Script: Auto-trigger download + GA4 + booking-form context ============ -->
   <script>
     (function() {
+      // Check if visitor came from the booking form (?from=booking)
+      var params = new URLSearchParams(window.location.search);
+      var fromBooking = params.get('from') === 'booking';
+
       var btn = document.getElementById('download-btn');
-      if (!btn) return;
+      var heroEyebrow = document.querySelector('.hero-eyebrow');
+      var heroH1 = document.querySelector('.hero h1');
+      var heroSubhead = document.querySelector('.hero-subhead');
+      var heroMeta = document.querySelector('.hero-meta');
+      var downloadCard = document.querySelector('.download-card');
+      var downloadSection = document.querySelector('.download-section');
 
-      // Track download clicks
-      btn.addEventListener('click', function() {
-        if (typeof gtag === 'function') {
-          gtag('event', 'pdf_download_click', {
-            'event_category': 'engagement',
-            'event_label': 'periodic_table_of_ai_elements_pdf',
-            'value': 1
-          });
-        }
-      });
+      if (fromBooking) {
+        // Booking-form visitor — change messaging to reflect that this is a review request, not a download
+        if (heroEyebrow) heroEyebrow.textContent = 'Booking request received';
+        if (heroH1) heroH1.textContent = 'Thanks — your AI Opportunity Review request is in.';
+        if (heroSubhead) heroSubhead.innerHTML = "Simon will personally reply to your request within 1 business day. In the meantime, you're welcome to download the Periodic Table of AI Elements below — it's the framework we'll use as the basis of your review.";
+        if (heroMeta) heroMeta.innerHTML = "From <a href=\"mailto:simon.childs@optitude360.com\">simon.childs@optitude360.com</a> · Watch for Simon's reply within 1 business day";
 
-      // Auto-trigger download after 1.5s (gives user time to read the page first)
-      // Comment out the next 4 lines if you'd rather NOT auto-download
-      setTimeout(function() {
-        // Only auto-trigger if user hasn't already clicked
-        if (!btn.dataset.clicked) {
-          btn.click();
+        // Don't auto-trigger PDF download for booking visitors (they came for a call, not a download)
+        // Still let them download manually via the button
+      } else if (btn) {
+        // Guide download visitor — auto-trigger PDF download after 1.5s
+        btn.addEventListener('click', function() {
+          if (typeof gtag === 'function') {
+            gtag('event', 'pdf_download_click', {
+              'event_category': 'engagement',
+              'event_label': 'periodic_table_of_ai_elements_pdf',
+              'value': 1
+            });
+          }
+        });
+
+        setTimeout(function() {
+          if (!btn.dataset.clicked) {
+            btn.click();
+            btn.dataset.clicked = '1';
+          }
+        }, 1500);
+
+        btn.addEventListener('click', function() {
           btn.dataset.clicked = '1';
-        }
-      }, 1500);
-
-      // Mark as clicked so auto-trigger doesn't double-fire
-      btn.addEventListener('click', function() {
-        btn.dataset.clicked = '1';
-      }, { once: true });
-
+        }, { once: true });
+      }
     })();
   </script>
 
