@@ -1,2 +1,10 @@
 skills/
 node_modules/
+
+# Sensitive
+.env
+
+# Internal agent scratchpad (not for public repo)
+tool-results/
+upload/
+README.md
