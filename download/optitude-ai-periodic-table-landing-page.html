@@ -1141,8 +1141,7 @@
         .then(function(data) {
           // FormSubmit returns { success: 'true', message: '...' } on success
           if (data && (data.success === 'true' || data.success === true)) {
-            showSuccess();
-            // GA4 conversion event
+            // GA4 conversion event (fires before redirect so it isn't lost)
             if (typeof gtag === 'function') {
               gtag('event', 'guide_download', {
                 'event_category': 'engagement',
@@ -1150,6 +1149,8 @@
                 'value': 1
               });
             }
+            // Redirect to thank-you page where the PDF download is served
+            window.location.href = 'thank-you.html';
           } else {
             throw new Error(data && data.message ? data.message : 'Submission failed');
           }
