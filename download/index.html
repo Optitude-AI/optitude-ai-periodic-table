@@ -114,9 +114,9 @@
     /* ============ HEADER ============ */
     .site-header {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,0.96);
-      backdrop-filter: blur(8px);
+      background: #FFFFFF;
       border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     .site-header .container {
       display: flex; justify-content: space-between; align-items: center;
@@ -389,6 +389,19 @@
       pointer-events: none;
     }
     .form-section .container { position: relative; }
+    /* Booking form section: light background so it visually contrasts with the dark download section above it (avoids the 'two duplicate CTAs back-to-back' look) */
+    .form-section.form-section-light {
+      background: var(--bg-alt);
+      color: var(--text);
+    }
+    .form-section.form-section-light::before {
+      background: radial-gradient(ellipse at top right, rgba(201,168,76,0.08) 0%, transparent 50%);
+    }
+    .form-section.form-section-light .form-intro h2 { color: var(--text); }
+    .form-section.form-section-light .form-intro p { color: var(--text-soft); }
+    .form-section.form-section-light .form-intro ul li { color: var(--text-soft); }
+    .form-section.form-section-light .form-intro ul li strong { color: var(--text); }
+    .form-section.form-section-light .form-intro .section-eyebrow { color: var(--accent-dark); }
     .form-wrap {
       display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px;
       align-items: start;
@@ -957,7 +970,7 @@
   </section>
 
   <!-- ============ BOOK AN AI OPPORTUNITY REVIEW ============ -->
-  <section class="form-section" id="book-a-review">
+  <section class="form-section form-section-light" id="book-a-review">
     <div class="container">
       <div class="form-wrap">
         <div class="form-intro">
