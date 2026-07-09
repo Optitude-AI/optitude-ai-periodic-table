@@ -861,8 +861,10 @@
 
         <div class="form-card">
           <!-- FormSubmit.co sends submissions to simon.childs@optitude360.com.
-               No backend needed. First submission triggers an activation email to that address. -->
-          <form id="download-form" action="https://formsubmit.co/ajax/simon.childs@optitude360.com" method="POST" novalidate>
+               Uses regular POST (not AJAX) to avoid CORS issues with FormSubmit's /ajax/ endpoint.
+               On submit, browser navigates to FormSubmit → FormSubmit emails Simon → redirects to /thank-you.
+               First ever submission triggers an activation email to simon.childs@optitude360.com that must be clicked once. -->
+          <form id="download-form" action="https://formsubmit.co/simon.childs@optitude360.com" method="POST" novalidate>
             <h3>Download the guide</h3>
             <p class="form-subtitle">Free PDF — takes 30 seconds.</p>
 
@@ -870,8 +872,7 @@
             <input type="hidden" name="_subject" value="New download — Periodic Table of AI Elements">
             <input type="hidden" name="_template" value="table">
             <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_honey" value="">
-            <input type="hidden" name="_replyto" value="">
+            <input type="hidden" name="_next" value="https://periodic-table.optitudeai.com/thank-you">
             <!-- After activation, replace the email above with the hashed version FormSubmit provides
                  to stop the address being scrapeable from the HTML. -->
 
@@ -1075,23 +1076,27 @@
 
   <!-- ============ Analytics + Form Script ============ -->
   <script>
-    // Form submission handler — POSTs to FormSubmit.co which emails Simon.Childs@optitude360.com
+    // Form submission handler — validates client-side, then lets the browser
+    // submit the form natively to FormSubmit (regular POST, no AJAX).
+    // FormSubmit processes the submission, emails Simon.Childs@optitude360.com,
+    // and redirects the browser to the _next URL (our /thank-you page).
     (function() {
       var form = document.getElementById('download-form');
-      var success = document.getElementById('form-success');
       var submitBtn = document.getElementById('submit-btn');
 
       if (!form) return;
 
       form.addEventListener('submit', function(e) {
-        e.preventDefault();
+        // Honeypot check — if filled, silently abort (looks like a bot)
+        if (form._honey && form._honey.value) {
+          e.preventDefault();
+          return;
+        }
 
-        // Honeypot check (our local one — FormSubmit has its own _honey too)
-        if (form._honey && form._honey.value) { return; }
-
-        // Basic validation
+        // Basic validation — if invalid, prevent submit and alert the user
         if (!form.firstName.value.trim() || !form.email.value.trim() ||
             !form.company.value.trim() || !form.aiChallenge.value) {
+          e.preventDefault();
           alert('Please complete all required fields (First name, Work email, Company name, Main AI challenge).');
           return;
         }
@@ -1099,78 +1104,26 @@
         // Email format check
         var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRe.test(form.email.value.trim())) {
+          e.preventDefault();
           alert('Please enter a valid work email address.');
           return;
         }
 
-        // Set _replyto so the email to Simon is replyable directly to the lead
-        form._replyto.value = form.email.value.trim();
-
-        // Build a clean payload for FormSubmit (only the fields we want emailed)
-        var payload = {
-          _subject: 'New download — Periodic Table of AI Elements',
-          _template: 'table',
-          _replyto: form.email.value.trim(),
-          firstName: form.firstName.value.trim(),
-          lastName: form.lastName.value.trim(),
-          email: form.email.value.trim(),
-          company: form.company.value.trim(),
-          jobTitle: form.jobTitle.value.trim(),
-          companySize: form.companySize.value,
-          aiChallenge: form.aiChallenge.options[form.aiChallenge.selectedIndex].text,
-          opportunityReviewRequested: form.opportunityReview.checked ? 'Yes — please contact me to book a call' : 'No',
-          marketingConsent: form.marketingConsent.checked ? 'Yes' : 'No',
-          consentTimestamp: new Date().toISOString(),
-          source: 'periodic-table-landing-page',
-          pageUrl: window.location.href
-        };
-
-        // Disable button + show submitting state
+        // If we got here, validation passed — let the form submit natively.
+        // Update button to show "Sending…" state (the browser will navigate away shortly).
         submitBtn.disabled = true;
         submitBtn.textContent = 'Sending…';
         submitBtn.style.opacity = '0.7';
 
-        // POST to FormSubmit (AJAX endpoint returns JSON)
-        fetch(form.action, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          // FormSubmit returns { success: 'true', message: '...' } on success
-          if (data && (data.success === 'true' || data.success === true)) {
-            // GA4 conversion event (fires before redirect so it isn't lost)
-            if (typeof gtag === 'function') {
-              gtag('event', 'guide_download', {
-                'event_category': 'engagement',
-                'event_label': 'periodic_table_of_ai_elements',
-                'value': 1
-              });
-            }
-            // Redirect to thank-you page where the PDF download is served
-            window.location.href = '/thank-you';
-          } else {
-            throw new Error(data && data.message ? data.message : 'Submission failed');
-          }
-        })
-        .catch(function(err) {
-          console.error('Form submission error:', err);
-          alert('Sorry, something went wrong sending your request. Please try again, or email us directly at hello@optitude360.com.');
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Download the Periodic Table of AI Elements';
-          submitBtn.style.opacity = '1';
-        });
+        // GA4 conversion event — fires just before navigation away
+        if (typeof gtag === 'function') {
+          gtag('event', 'guide_download', {
+            'event_category': 'engagement',
+            'event_label': 'periodic_table_of_ai_elements',
+            'value': 1
+          });
+        }
       });
-
-      function showSuccess() {
-        form.style.display = 'none';
-        success.classList.add('show');
-        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
     })();
   </script>
 
