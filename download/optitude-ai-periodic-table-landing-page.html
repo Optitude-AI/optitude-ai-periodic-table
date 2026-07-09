@@ -858,9 +858,20 @@
         </div>
 
         <div class="form-card">
-          <form id="download-form" novalidate>
+          <!-- FormSubmit.co sends submissions to simon.childs@optitude360.com.
+               No backend needed. First submission triggers an activation email to that address. -->
+          <form id="download-form" action="https://formsubmit.co/ajax/simon.childs@optitude360.com" method="POST" novalidate>
             <h3>Download the guide</h3>
             <p class="form-subtitle">Free PDF — takes 30 seconds.</p>
+
+            <!-- FormSubmit configuration (hidden) -->
+            <input type="hidden" name="_subject" value="New download — Periodic Table of AI Elements">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_honey" value="">
+            <input type="hidden" name="_replyto" value="">
+            <!-- After activation, replace the email above with the hashed version FormSubmit provides
+                 to stop the address being scrapeable from the HTML. -->
 
             <div class="form-row">
               <div class="form-field">
@@ -930,12 +941,13 @@
 
             <p class="form-disclaimer">By submitting this form, you agree that Optitude AI may process your information to send you the requested guide. You can unsubscribe from marketing emails at any time. Please see our <a href="/privacy-policy">Privacy Policy</a> for details on how we handle your information.</p>
 
-            <!-- Honeypot field for spam protection (hidden from users) -->
+            <!-- Honeypot field for spam protection (hidden from users).
+                 Named _honey so FormSubmit treats it as its own honeypot too. -->
             <div style="position:absolute;left:-9999px;" aria-hidden="true">
-              <label>Leave this field empty: <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+              <label>Leave this field empty: <input type="text" name="_honey" tabindex="-1" autocomplete="off"></label>
             </div>
 
-            <button type="submit" class="btn btn-primary">Download the Periodic Table of AI Elements</button>
+            <button type="submit" class="btn btn-primary" id="submit-btn">Download the Periodic Table of AI Elements</button>
           </form>
 
           <div class="form-success" id="form-success">
@@ -1061,78 +1073,99 @@
 
   <!-- ============ Analytics + Form Script ============ -->
   <script>
-    // Form submission handler
-    // In production, replace this with a real POST to your CRM / marketing automation endpoint
-    // (HubSpot, Marketo, Pardot, Salesforce Web-to-Lead, or a serverless function)
+    // Form submission handler — POSTs to FormSubmit.co which emails Simon.Childs@optitude360.com
     (function() {
       var form = document.getElementById('download-form');
       var success = document.getElementById('form-success');
+      var submitBtn = document.getElementById('submit-btn');
 
       if (!form) return;
 
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // Honeypot check
-        if (form.website.value) { return; }
+        // Honeypot check (our local one — FormSubmit has its own _honey too)
+        if (form._honey && form._honey.value) { return; }
 
         // Basic validation
-        if (!form.firstName.value || !form.email.value || !form.company.value || !form.aiChallenge.value) {
-          alert('Please complete all required fields.');
+        if (!form.firstName.value.trim() || !form.email.value.trim() ||
+            !form.company.value.trim() || !form.aiChallenge.value) {
+          alert('Please complete all required fields (First name, Work email, Company name, Main AI challenge).');
           return;
         }
 
         // Email format check
         var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRe.test(form.email.value)) {
+        if (!emailRe.test(form.email.value.trim())) {
           alert('Please enter a valid work email address.');
           return;
         }
 
-        // Build lead payload
+        // Set _replyto so the email to Simon is replyable directly to the lead
+        form._replyto.value = form.email.value.trim();
+
+        // Build a clean payload for FormSubmit (only the fields we want emailed)
         var payload = {
-          firstName: form.firstName.value,
-          lastName: form.lastName.value,
-          email: form.email.value,
-          company: form.company.value,
-          jobTitle: form.jobTitle.value,
+          _subject: 'New download — Periodic Table of AI Elements',
+          _template: 'table',
+          _replyto: form.email.value.trim(),
+          firstName: form.firstName.value.trim(),
+          lastName: form.lastName.value.trim(),
+          email: form.email.value.trim(),
+          company: form.company.value.trim(),
+          jobTitle: form.jobTitle.value.trim(),
           companySize: form.companySize.value,
-          aiChallenge: form.aiChallenge.value,
-          opportunityReviewRequested: form.opportunityReview.checked,
-          marketingConsent: form.marketingConsent.checked,
+          aiChallenge: form.aiChallenge.options[form.aiChallenge.selectedIndex].text,
+          opportunityReviewRequested: form.opportunityReview.checked ? 'Yes — please contact me to book a call' : 'No',
+          marketingConsent: form.marketingConsent.checked ? 'Yes' : 'No',
           consentTimestamp: new Date().toISOString(),
           source: 'periodic-table-landing-page',
           pageUrl: window.location.href
         };
 
-        // === Production: POST to your endpoint ===
-        // fetch('/api/leads/periodic-table-download', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(payload)
-        // }).then(function(res) {
-        //   if (res.ok) { showSuccess(); }
-        //   else { alert('Something went wrong. Please try again.'); }
-        // }).catch(function(err) { alert('Network error. Please try again.'); });
+        // Disable button + show submitting state
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+        submitBtn.style.opacity = '0.7';
 
-        // === Demo: simulate success ===
-        console.log('Lead payload (would be sent to CRM):', payload);
-        showSuccess();
-
-        // GA4 conversion event
-        if (typeof gtag === 'function') {
-          gtag('event', 'guide_download', {
-            'event_category': 'engagement',
-            'event_label': 'periodic_table_of_ai_elements',
-            'value': 1
-          });
-        }
+        // POST to FormSubmit (AJAX endpoint returns JSON)
+        fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          // FormSubmit returns { success: 'true', message: '...' } on success
+          if (data && (data.success === 'true' || data.success === true)) {
+            showSuccess();
+            // GA4 conversion event
+            if (typeof gtag === 'function') {
+              gtag('event', 'guide_download', {
+                'event_category': 'engagement',
+                'event_label': 'periodic_table_of_ai_elements',
+                'value': 1
+              });
+            }
+          } else {
+            throw new Error(data && data.message ? data.message : 'Submission failed');
+          }
+        })
+        .catch(function(err) {
+          console.error('Form submission error:', err);
+          alert('Sorry, something went wrong sending your request. Please try again, or email us directly at hello@optitude360.com.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Download the Periodic Table of AI Elements';
+          submitBtn.style.opacity = '1';
+        });
       });
 
       function showSuccess() {
         form.style.display = 'none';
         success.classList.add('show');
-        // Scroll success into view on mobile
         success.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     })();
